@@ -164,9 +164,4 @@ public class TicTacToeApp {
         return pm;
     }
 
-
-    public static int r() {
-            return 1;
-    }
-
 }
