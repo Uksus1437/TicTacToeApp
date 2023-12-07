@@ -165,7 +165,8 @@ public class TicTacToeApp {
     }
 
 
-    void r() {
+    public static int r() {
             return 1;
     }
+
 }
