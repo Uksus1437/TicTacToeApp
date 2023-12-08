@@ -81,7 +81,7 @@ class TicTacToeApp {
     public static void comp_move() {
         rootsChildrenScores = new ArrayList<>();
         minimax(0, 1);
-        if (!check_win('X')) {
+        if (!check_end()) {
             map[getBestMove().x][getBestMove().y] = '0';
         }
     }
