@@ -100,8 +100,8 @@ class TicTacToeApp {
 
 
     public static int minimax(int depth, int turn) {
-        if (check_win('X')) return +1;
-        if (check_win('0')) return -1;
+        if (check_win('0')) return +1;
+        if (check_win('X')) return -1;
         if (check_draw()) return 0;
 
         List<Point> possible_moves = possible_moves();
