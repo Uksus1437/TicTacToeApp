@@ -1,21 +1,10 @@
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
-
-public class TicTacToeApp {
+class TicTacToeApp {
     static char[][] map;
     static final int MAP_SIZE = 3;
-
-    public static void main(String[] args) {
-        init_map();
-        print_map();
-        while (!check_end()) {
-            play_game();
-            print_map();
-        }
-        if (check_win('X')) System.out.println("Игрок победил");
-        else if (check_win('0')) System.out.println("Компьютер победил");
-        else System.out.println("Ничья");
-    }
 
     public static void init_map() {
         map = new char[MAP_SIZE][MAP_SIZE];
@@ -69,15 +58,15 @@ public class TicTacToeApp {
     public static void play_game() {
         boolean true_turn = false;
 
-        int x = 0, y = 0;
+        Point point = new Point(0, 0);
         while ((!true_turn) && (!check_end())) {
             System.out.print("Введите координаты x, y:");
             Scanner n = new Scanner((System.in));
-            x = n.nextInt();
-            y = n.nextInt();
-            if (map[x][y] == '*') true_turn = true;
+            point.x = n.nextInt();
+            point.y = n.nextInt();
+            if (map[point.x][point.y] == '*') true_turn = true;
         }
-        map[x][y] = 'X';
+        map[point.x][point.y] = 'X';
         comp_move();
     }
 
@@ -86,82 +75,93 @@ public class TicTacToeApp {
         else return false;
     }
 
+    static List<PointsAndScores> rootsChildrenScores;
+
+
     public static void comp_move() {
-        int[] move = getBestMove();
-        map[move[0]][move[1]] = '0';
-    }
-
-
-    public static int minimax(int depth, boolean isMax) {
-        if (check_win('X')) {
-            return -1;
-        } else if (check_win('O')) {
-            return 1;
-        } else if (check_draw()) return 0;
-
-        if (isMax) {
-            int bestScore = Integer.MIN_VALUE;
-            for (int i = 0; i < MAP_SIZE; i++) {
-                for (int j = 0; j < MAP_SIZE; j++) {
-                    if (map[i][j] == '*') {
-                        map[i][j] = '0';
-                        int score = minimax(depth + 1, false);
-                        map[i][j] = '*';
-                        bestScore = Math.max(score, bestScore);
-                    }
-                }
-            }
-            return bestScore;
-        } else {
-            int bestScore = Integer.MAX_VALUE;
-            for (int i = 0; i < MAP_SIZE; i++) {
-                for (int j = 0; j < MAP_SIZE; j++) {
-                    if (map[i][j] == '*') {
-                        map[i][j] = 'X';
-                        int score = minimax(depth + 1, true);
-                        map[i][j] = '*';
-                        bestScore = Math.min(score, bestScore);
-                    }
-                }
-            }
-            return bestScore;
+        rootsChildrenScores = new ArrayList<>();
+        minimax(0, 1);
+        if (!check_win('X')) {
+            map[getBestMove().x][getBestMove().y] = '0';
         }
     }
 
-    public static int[] getBestMove() {
-        int[] bestMove = new int[]{-1, -1};
-        int bestScore = Integer.MIN_VALUE;
+    public static Point getBestMove() {
+        int MAX = -100000;
+        int best = -1;
+        for (int i = 0; i < rootsChildrenScores.size(); ++i) {
+            if (MAX < rootsChildrenScores.get(i).score) {
+                MAX = rootsChildrenScores.get(i).score;
+                best = i;
+            }
+        }
+        return rootsChildrenScores.get(best).point;
+    }
 
+
+    public static int minimax(int depth, int turn) {
+        if (check_win('X')) return +1;
+        if (check_win('0')) return -1;
+        if (check_draw()) return 0;
+
+        List<Point> possible_moves = possible_moves();
+        if (possible_moves.isEmpty()) return 0;
+        List<Integer> scores = new ArrayList<>();
+
+        for (int i = 0; i < possible_moves.size(); i++) {
+            Point point = possible_moves.get(i);
+            if (turn == 1) {
+                map[point.x][point.y] = '0';
+                int currentScore = minimax(+1, 2);
+                scores.add(currentScore);
+
+                if (depth == 0) {
+                    rootsChildrenScores.add(new PointsAndScores(currentScore, point));
+                }
+            } else if (turn == 2) {
+                map[point.x][point.y] = 'X';
+                scores.add(minimax(+1, 1));
+            }
+            map[point.x][point.y] = '*';
+        }
+        return turn == 1 ? retMax(scores) : retMin((scores));
+    }
+
+    public static int retMax(List<Integer> scores) {
+        int max = Integer.MIN_VALUE;
+        int index = -1;
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.get(i) > max) {
+                max = scores.get(i);
+                index = i;
+            }
+        }
+        return scores.get(index);
+    }
+
+    public static int retMin(List<Integer> scores) {
+        int min = Integer.MAX_VALUE;
+        int index = -1;
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.get(i) < min) {
+                min = scores.get(i);
+                index = i;
+            }
+        }
+        return scores.get(index);
+    }
+
+    public static List<Point> possible_moves() {
+        ArrayList<Point> pos_m = new ArrayList<>();
         for (int i = 0; i < MAP_SIZE; i++) {
             for (int j = 0; j < MAP_SIZE; j++) {
                 if (map[i][j] == '*') {
-                    map[i][j] = '0';
-                    int score = minimax(0, false);
-                    map[i][j] = '*';
-
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMove[0] = i;
-                        bestMove[1] = j;
-                    }
+                    pos_m.add(new Point(i, j));
                 }
             }
         }
-
-        return bestMove;
+        return pos_m;
     }
 
-    public static int[][] possible_moves() {
-        int[][] pm = new int[9][2];
-        int c = 0;
-        for (int i = 0; i < MAP_SIZE; i++) {
-            for (int j = 0; j < MAP_SIZE; j++) {
-                if (map[i][j] == '*') ;
-                pm[c][0] = i;
-                pm[c][1] = j;
-            }
-        }
-        return pm;
-    }
 
 }
