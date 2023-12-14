@@ -12,7 +12,7 @@ public class TicTacToeGame extends JFrame {
     public TicTacToeGame() {
         setTitle("Крестики-нолики");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 300);
+        setSize(500, 500);
         setLayout(new GridLayout(3, 3));
 
         buttons = new JButton[3][3];
@@ -26,8 +26,9 @@ public class TicTacToeGame extends JFrame {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 JButton button = new JButton();
+                button.setBackground(Color.WHITE);
                 buttons[row][col] = button;
-                button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
+                button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
                 button.addActionListener(new ButtonClickListener(row, col));
                 add(button);
             }
