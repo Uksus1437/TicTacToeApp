@@ -2,18 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.List;
 public class TicTacToeGame extends JFrame {
 
     public static JButton[][] buttons;
-    private boolean player1Turn;
+    public static boolean player1Turn;
 
     private boolean gameEnded;
-
+    public static List<PointsAndScores> rootsChildrenScores;
     public TicTacToeGame() {
         setTitle("Крестики-нолики");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
+        setLocationRelativeTo(null);
         setLayout(new GridLayout(3, 3));
 
         buttons = new JButton[3][3];
@@ -82,10 +83,11 @@ public class TicTacToeGame extends JFrame {
         }
     }
 
-    private void announceWinner(String winner) {
+    public void announceWinner(String winner) {
         gameEnded = true;
         if (winner == "Ничья") {
             JOptionPane.showMessageDialog(this, winner);
+            resetGame();
         } else {
             JOptionPane.showMessageDialog(this, "Победитель: " + winner);
             resetGame();
@@ -93,6 +95,7 @@ public class TicTacToeGame extends JFrame {
     }
 
     private void resetGame() {
+        TicTacToeApp.init_map();
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 buttons[row][col].setText("");
@@ -101,7 +104,7 @@ public class TicTacToeGame extends JFrame {
         gameEnded = false;
     }
 
-    private class ButtonClickListener implements ActionListener {
+    public class ButtonClickListener implements ActionListener {
         private int row;
         private int col;
 
@@ -112,19 +115,19 @@ public class TicTacToeGame extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             if (buttons[row][col].getText().isEmpty() && !gameEnded) {
-                buttons[row][col].setText("X");
-                TicTacToeApp.map[row][col] = 'X';
-                buttons[TicTacToeApp.getBestMove().x][TicTacToeApp.getBestMove().y].setText(TicTacToeApp.COMP_P);
+                    buttons[row][col].setText(String.valueOf(TicTacToeApp.REAL_P));
+                    TicTacToeApp.map[row][col] = TicTacToeApp.REAL_P;
+                TicTacToeApp.comp_move();
                 checkForWinner_1();
             }
         }
+    }
 
-
-        public static void main(String[] args) {
-            SwingUtilities.invokeLater(() -> {
-                TicTacToeGame game = new TicTacToeGame();
-                game.setVisible(true);
-            });
-        }
+    public static void PlayStart() {
+        TicTacToeApp.init_map();
+        SwingUtilities.invokeLater(() -> {
+            TicTacToeGame game = new TicTacToeGame();
+            game.setVisible(true);
+        });
     }
 }

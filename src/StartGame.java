@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.util.Scanner;
 
 public class StartGame {
