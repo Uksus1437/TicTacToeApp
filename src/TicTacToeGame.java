@@ -5,8 +5,9 @@ import java.awt.event.ActionListener;
 
 public class TicTacToeGame extends JFrame {
 
-    private JButton[][] buttons;
+    public static JButton[][] buttons;
     private boolean player1Turn;
+
     private boolean gameEnded;
 
     public TicTacToeGame() {
@@ -35,7 +36,7 @@ public class TicTacToeGame extends JFrame {
         }
     }
 
-    private void checkForWinner() {
+    private void checkForWinner_1() {
         // Check rows, columns, and diagonals for a winner
         for (int i = 0; i < 3; i++) {
             if (buttons[i][0].getText().equals(buttons[i][1].getText()) &&
@@ -83,9 +84,9 @@ public class TicTacToeGame extends JFrame {
 
     private void announceWinner(String winner) {
         gameEnded = true;
-        if (winner == "Ничья"){
+        if (winner == "Ничья") {
             JOptionPane.showMessageDialog(this, winner);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this, "Победитель: " + winner);
             resetGame();
         }
@@ -111,21 +112,19 @@ public class TicTacToeGame extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             if (buttons[row][col].getText().isEmpty() && !gameEnded) {
-                if (player1Turn) {
-                    buttons[row][col].setText("X");
-                } else {
-                    buttons[row][col].setText("O");
-                }
-                player1Turn = !player1Turn;
-                checkForWinner();
+                buttons[row][col].setText("X");
+                TicTacToeApp.map[row][col] = 'X';
+                buttons[TicTacToeApp.getBestMove().x][TicTacToeApp.getBestMove().y].setText(TicTacToeApp.COMP_P);
+                checkForWinner_1();
             }
         }
-    }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            TicTacToeGame game = new TicTacToeGame();
-            game.setVisible(true);
-        });
+
+        public static void main(String[] args) {
+            SwingUtilities.invokeLater(() -> {
+                TicTacToeGame game = new TicTacToeGame();
+                game.setVisible(true);
+            });
+        }
     }
 }

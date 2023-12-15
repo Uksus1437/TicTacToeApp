@@ -180,6 +180,7 @@ class TicTacToeApp {
         minimax(0, 1);
         if (!check_end()) {
             map[getBestMove().x][getBestMove().y] = COMP_P;
+            TicTacToeGame.buttons[TicTacToeApp.getBestMove().x][TicTacToeApp.getBestMove().y].setText("0");
         }
     }
 

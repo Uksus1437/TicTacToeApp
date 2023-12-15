@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Scanner;
 
 public class StartGame {
@@ -13,6 +14,10 @@ public class StartGame {
             System.out.print("\033[H\033[2J");
             switch (sw) {
                 case 1:
+                    SwingUtilities.invokeLater(() -> {
+                        TicTacToeGame game = new TicTacToeGame();
+                        game.setVisible(true);
+                    });
                     System.out.println("Вы играете за " + TicTacToeApp.REAL_P);
                     TicTacToeApp.init_map();
                     if (TicTacToeApp.first == 'p') TicTacToeApp.print_map();
