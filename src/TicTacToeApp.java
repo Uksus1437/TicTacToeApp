@@ -2,7 +2,6 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 class TicTacToeApp {
     static char[][] map;
@@ -12,6 +11,7 @@ class TicTacToeApp {
     static char REAL_P = 'X';
 
     static char first = 'p';
+    static String opponent = "bot";
 
     public static void print_settings() {
         Scanner scanner = new Scanner(System.in);
@@ -133,7 +133,7 @@ class TicTacToeApp {
     }
 
     public static void play_game() {
-        if (TicTacToeGame.player1Turn == true) {
+        if (TicTacToeGameWindow.player1Turn == true) {
 
             comp_move();
         } else {
@@ -161,24 +161,24 @@ class TicTacToeApp {
 
 
     public static void comp_move() {
-        TicTacToeGame.rootsChildrenScores = new ArrayList<>();
+        TicTacToeGameWindow.rootsChildrenScores = new ArrayList<>();
         minimax(0, 1);
         if (!check_end()) {
             map[getBestMove().x][getBestMove().y] = COMP_P;
-            TicTacToeGame.buttons[getBestMove().x][getBestMove().y].setText(String.valueOf(COMP_P));
+            TicTacToeGameWindow.buttons[getBestMove().x][getBestMove().y].setText(String.valueOf(COMP_P));
         }
     }
 
     public static Point getBestMove() {
         int MAX = -100000;
         int best = -1;
-        for (int i = 0; i < TicTacToeGame.rootsChildrenScores.size(); ++i) {
-            if (MAX < TicTacToeGame.rootsChildrenScores.get(i).score) {
-                MAX = TicTacToeGame.rootsChildrenScores.get(i).score;
+        for (int i = 0; i < TicTacToeGameWindow.rootsChildrenScores.size(); ++i) {
+            if (MAX < TicTacToeGameWindow.rootsChildrenScores.get(i).score) {
+                MAX = TicTacToeGameWindow.rootsChildrenScores.get(i).score;
                 best = i;
             }
         }
-        return TicTacToeGame.rootsChildrenScores.get(best).point;
+        return TicTacToeGameWindow.rootsChildrenScores.get(best).point;
     }
 
 
@@ -199,7 +199,7 @@ class TicTacToeApp {
                 scores.add(currentScore);
 
                 if (depth == 0) {
-                    TicTacToeGame.rootsChildrenScores.add(new PointsAndScores(currentScore, point));
+                    TicTacToeGameWindow.rootsChildrenScores.add(new PointsAndScores(currentScore, point));
                 }
             } else if (turn == 2) {
                 map[point.x][point.y] = REAL_P;

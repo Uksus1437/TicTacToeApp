@@ -3,19 +3,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-public class TicTacToeGame extends JFrame {
+import javax.swing.border.EmptyBorder;
+
+public class TicTacToeGameWindow extends JFrame {
 
     public static JButton[][] buttons;
     public static boolean player1Turn;
 
     private boolean gameEnded;
     public static List<PointsAndScores> rootsChildrenScores;
-    public TicTacToeGame() {
+
+    public TicTacToeGameWindow() {
         setTitle("Крестики-нолики");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(3, 3));
+        setLayout(new GridLayout(3, 3, 5, 5)); // Добавление отступов между кнопками
 
         buttons = new JButton[3][3];
         player1Turn = true;
@@ -29,11 +32,15 @@ public class TicTacToeGame extends JFrame {
             for (int col = 0; col < 3; col++) {
                 JButton button = new JButton();
                 button.setBackground(Color.WHITE);
+                button.setBorder(new EmptyBorder(10, 10, 10, 10)); // Добавление границ
                 buttons[row][col] = button;
-                button.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 60));
+                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 60)); // Изменение стиля шрифта
                 button.addActionListener(new ButtonClickListener(row, col));
                 add(button);
             }
+        }
+        if (TicTacToeApp.first == 'c') {
+            TicTacToeApp.comp_move();
         }
     }
 
@@ -101,6 +108,9 @@ public class TicTacToeGame extends JFrame {
                 buttons[row][col].setText("");
             }
         }
+        if (TicTacToeApp.first == 'c') {
+            TicTacToeApp.comp_move();
+        }
         gameEnded = false;
     }
 
@@ -114,19 +124,34 @@ public class TicTacToeGame extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (buttons[row][col].getText().isEmpty() && !gameEnded) {
+            if (TicTacToeApp.opponent == "bot") {
+                if (buttons[row][col].getText().isEmpty() && !gameEnded) {
                     buttons[row][col].setText(String.valueOf(TicTacToeApp.REAL_P));
                     TicTacToeApp.map[row][col] = TicTacToeApp.REAL_P;
-                TicTacToeApp.comp_move();
-                checkForWinner_1();
+                    TicTacToeApp.comp_move();
+                    checkForWinner_1();
+                }
+            }else{
+                if (buttons[row][col].getText().isEmpty() && !gameEnded) {
+                    if(player1Turn == true) {
+                        buttons[row][col].setText(String.valueOf(TicTacToeApp.REAL_P));
+                        TicTacToeApp.map[row][col] = TicTacToeApp.REAL_P;
+                    }else {
+                        buttons[row][col].setText(String.valueOf(TicTacToeApp.COMP_P));
+                        TicTacToeApp.map[row][col] = TicTacToeApp.COMP_P;
+                    }
+                    player1Turn = !player1Turn;
+                    checkForWinner_1();
+                }
             }
         }
     }
 
+
     public static void PlayStart() {
         TicTacToeApp.init_map();
         SwingUtilities.invokeLater(() -> {
-            TicTacToeGame game = new TicTacToeGame();
+            TicTacToeGameWindow game = new TicTacToeGameWindow();
             game.setVisible(true);
         });
     }

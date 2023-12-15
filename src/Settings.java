@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class Settings extends JFrame {
     private JCheckBox choice1CheckBox, choice2CheckBox, choice3CheckBox, choice4CheckBox;
@@ -15,15 +16,14 @@ public class Settings extends JFrame {
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(5, 1));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Adding padding to the main panel
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Player Settings Panel
         JPanel playerPanel = new JPanel(new BorderLayout());
         playerPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("Игроки"),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5))); // Adding padding to player panel
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         playersToggle = new JToggleButton("1 игрок");
-        playersToggle.setPreferredSize(new Dimension(500, 100));
         playersToggle.addItemListener(e -> {
             if (playersToggle.isSelected()) {
                 playersToggle.setText("2 игрока");
@@ -37,8 +37,8 @@ public class Settings extends JFrame {
         // Game Options Panel
         JPanel gameOptionsPanel = new JPanel(new GridLayout(2, 1));
         gameOptionsPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("Опции игры"),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5))); // Adding padding to game options panel
+                BorderFactory.createTitledBorder("Играть за"),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         choice1CheckBox = new JCheckBox("Крестики");
         choice2CheckBox = new JCheckBox("Нолики");
@@ -51,11 +51,13 @@ public class Settings extends JFrame {
         gameOptionsPanel.add(choice2CheckBox);
         mainPanel.add(gameOptionsPanel);
 
+        choice1CheckBox.setSelected(true);
+
         // Turn Order Panel
         JPanel turnOrderPanel = new JPanel(new GridLayout(2, 1));
         turnOrderPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createTitledBorder("Порядок хода"),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5))); // Adding padding to turn order panel
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         choice3CheckBox = new JCheckBox("Первым");
         choice4CheckBox = new JCheckBox("Вторым");
@@ -66,6 +68,9 @@ public class Settings extends JFrame {
         turnOrderPanel.add(choice3CheckBox);
         turnOrderPanel.add(choice4CheckBox);
         mainPanel.add(turnOrderPanel);
+
+        choice3CheckBox.setSelected(true);
+
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton backButton = new JButton("Назад");
         backButton.addActionListener(e -> {
@@ -75,11 +80,42 @@ public class Settings extends JFrame {
         backButtonPanel.add(backButton);
         mainPanel.add(backButtonPanel);
 
-        // Adding vertical gaps between panels
         mainPanel.add(Box.createVerticalStrut(10));
         getContentPane().add(mainPanel);
 
         setVisible(true);
+
+        choice1CheckBox.addActionListener(e -> {
+            if (choice1CheckBox.isSelected()) {
+                TicTacToeApp.REAL_P = 'X';
+                TicTacToeApp.COMP_P = '0';
+            }
+        });
+
+        choice2CheckBox.addActionListener(e -> {
+            if (choice2CheckBox.isSelected()) {
+                TicTacToeApp.REAL_P = '0';
+                TicTacToeApp.COMP_P = 'X';
+            }
+        });
+
+        choice3CheckBox.addActionListener(e -> {
+            if (choice3CheckBox.isSelected()) {
+                TicTacToeApp.first = 'p';
+            }
+        });
+
+        choice4CheckBox.addActionListener(e -> {
+            if (choice4CheckBox.isSelected()) {
+                TicTacToeApp.first = 'c';
+            }
+        });
+
+        playersToggle.addActionListener(e -> {
+            if (playersToggle.isSelected()) {
+                TicTacToeApp.opponent = "person";
+            }
+        });
     }
 
     public static void settings() {
