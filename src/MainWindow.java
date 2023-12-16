@@ -35,8 +35,8 @@ public class MainWindow extends JFrame implements ActionListener {
         exitButton.addActionListener(this);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 1, 10, 10)); // Установка отступов между кнопками
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30)); // Установка внешнего отступа
+        panel.setLayout(new GridLayout(3, 1, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
         panel.add(playButton);
         panel.add(settingsButton);

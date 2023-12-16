@@ -18,11 +18,22 @@ public class TicTacToeGameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(3, 3, 5, 5)); // Добавление отступов между кнопками
+        setLayout(new GridLayout(3, 3, 5, 5));
+
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
 
         buttons = new JButton[3][3];
         player1Turn = true;
         gameEnded = false;
+        JMenuItem backButton = new JMenuItem("Назад");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new MainWindow();
+                setVisible(false);
+            }
+        });
+        menuBar.add(backButton);
 
         initializeButtons();
     }
@@ -32,9 +43,9 @@ public class TicTacToeGameWindow extends JFrame {
             for (int col = 0; col < 3; col++) {
                 JButton button = new JButton();
                 button.setBackground(Color.WHITE);
-                button.setBorder(new EmptyBorder(10, 10, 10, 10)); // Добавление границ
+                button.setBorder(new EmptyBorder(10, 10, 10, 10));
                 buttons[row][col] = button;
-                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 60)); // Изменение стиля шрифта
+                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 60));
                 button.addActionListener(new ButtonClickListener(row, col));
                 add(button);
             }
@@ -45,7 +56,6 @@ public class TicTacToeGameWindow extends JFrame {
     }
 
     private void checkForWinner_1() {
-        // Check rows, columns, and diagonals for a winner
         for (int i = 0; i < 3; i++) {
             if (buttons[i][0].getText().equals(buttons[i][1].getText()) &&
                     buttons[i][0].getText().equals(buttons[i][2].getText()) &&

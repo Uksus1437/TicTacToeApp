@@ -13,76 +13,6 @@ class TicTacToeApp {
     static char first = 'p';
     static String opponent = "bot";
 
-    public static void print_settings() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("------Настройки------");
-        System.out.println("1. Изменить фигуру");
-        System.out.println("2. Изменить первого игрока");
-        System.out.println("3. Назад");
-        int sw = scanner.nextInt();
-        switch (sw) {
-            case 1:
-                System.out.println("1. Играть за нолики");
-                System.out.println("2. Играть за крестики");
-                System.out.println("3. Рандом");
-                System.out.println("4. Назад");
-                int SwF = scanner.nextInt();
-                switch (SwF) {
-                    case 1:
-                        REAL_P = '0';
-                        break;
-                    case 2:
-                        REAL_P = 'X';
-                        break;
-                    case 3:
-                        rand_player();
-                        break;
-                    case 4:
-                        print_settings();
-                        break;
-                }
-                break;
-            case 2:
-                System.out.println("1. Ходить первым");
-                System.out.println("2. Ходить вторым");
-                System.out.println("3. Рандом");
-                System.out.println("4. Назад");
-                int SwT = scanner.nextInt();
-                switch (SwT) {
-                    case 1:
-                        first = 'p';
-                        break;
-                    case 2:
-                        first = 'c';
-                        break;
-                    case 3:
-                        rand_turn();
-                        break;
-                    case 4:
-                        print_settings();
-                        break;
-                }
-        }
-    }
-
-    public static void rand_player() {
-        Random p = new Random();
-        if (p.nextInt(2) == 1) {
-            COMP_P = '0';
-            REAL_P = 'X';
-        } else {
-            COMP_P = 'X';
-            REAL_P = '0';
-        }
-    }
-
-    public static void rand_turn() {
-        Random p = new Random();
-        if (p.nextInt(2) == 1) first = 'p';
-        else first = 'c';
-
-    }
-
     public static void init_map() {
         map = new char[MAP_SIZE][MAP_SIZE];
         for (int i = 0; i < MAP_SIZE; i++) {
@@ -130,28 +60,6 @@ class TicTacToeApp {
             }
         }
         return true;
-    }
-
-    public static void play_game() {
-        if (TicTacToeGameWindow.player1Turn == true) {
-
-            comp_move();
-        } else {
-            comp_move();
-            print_map();
-            boolean true_turn = false;
-
-            Point point = new Point(0, 0);
-            while ((!true_turn) && (!check_end())) {
-                System.out.print("Введите координаты x, y:");
-                Scanner n = new Scanner((System.in));
-                point.x = n.nextInt();
-                point.y = n.nextInt();
-                if ((map[point.x][point.y] == '*') && ((point.x < MAP_SIZE) && (point.x >= 0)) && ((point.y < MAP_SIZE) && (point.y >= 0)))
-                    true_turn = true;
-            }
-            map[point.x][point.y] = REAL_P;
-        }
     }
 
     public static boolean check_end() {
